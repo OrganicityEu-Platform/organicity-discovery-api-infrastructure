@@ -1,2 +1,6 @@
 .env
 ssh
+tmp
+*.sql
+*.idea
+.DS_Store

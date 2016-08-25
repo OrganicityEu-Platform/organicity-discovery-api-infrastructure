@@ -4,7 +4,7 @@ FROM ruby:2.2.2
 MAINTAINER Silvia Puglisi <silvia@fablabbcn.org>
 
 WORKDIR /$APPROOT
-ENV APPROOT organicity-discovery-api
+ENV APPROOT organicity-discovery-api-infrastructure/organicity-discovery-api
 
 # Install essential Linux packages
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client && apt-get install -y nodejs
