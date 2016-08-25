@@ -28,6 +28,8 @@ RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
 RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
 RUN cd /$APPROOT
 
+RUN ls
+
 # Define where our application will live inside the image
 ENV RAILS_ROOT $APPROOT
 
