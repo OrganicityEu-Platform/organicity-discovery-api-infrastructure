@@ -26,8 +26,7 @@ RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
 
 # Clone our private GitHub Repository
 RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
-RUN cd /$APPROOT
-
+RUN cd /organicity-discovery-api
 RUN ls
 
 # Define where our application will live inside the image
