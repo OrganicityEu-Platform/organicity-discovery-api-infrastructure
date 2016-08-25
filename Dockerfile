@@ -47,7 +47,7 @@ ADD Gemfile.lock Gemfile.lock
 RUN bundle install
 
 # Copy the Rails application into place
-COPY . .
+COPY . /organicity-discovery-api
 
 # Define the script we want run once the container boots
 # Use the "exec" form of CMD so our script shuts down gracefully on SIGTERM (i.e. `docker stop`)
