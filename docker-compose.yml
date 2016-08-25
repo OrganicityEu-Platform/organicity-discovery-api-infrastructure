@@ -37,7 +37,7 @@ app:
   env_file: .env
   # rely on the RAILS_ENV value of the host machine
   volumes:
-    - .:/organicity-discovery-api
+    - ./organicity-discovery-api:/organicity-discovery-api
     - ./organicity-discovery-api/tmp:/tmp
     - ./scripts:/scripts
     - ./config:/config
