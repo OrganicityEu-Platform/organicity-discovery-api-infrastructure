@@ -18,11 +18,8 @@ WORKDIR $RAILS_ROOT
 # create log directory
 RUN mkdir log
 
-# copy over static assets
-COPY public public/
-
 # copy our Nginx config template
-COPY config/containers/nginx.conf /tmp/discovery.nginx
+COPY config/nginx.conf /tmp/discovery.nginx
 
 # substitute variable references in the Nginx config template for real values from the environment
 # put the final config in its place
