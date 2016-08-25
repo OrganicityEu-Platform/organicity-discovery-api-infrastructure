@@ -27,7 +27,7 @@ mongo:
   # Expose port only within docker
   ports:
     - "3344:3344"
-  command: bash -c "./scripts/tunnel.sh"
+  command: bash -c "/scripts/tunnel.sh"
 
 # service configuration for our dockerized Rails app
 app:
@@ -49,13 +49,13 @@ app:
   # expose the port we configured Puma to bind to (should expose only internally)
   ports:
     - "3000:3000"
-  command: bash -c "./scripts/startup.sh"
+  command: bash -c "/scripts/startup.sh"
 
 worker:
   build: .
   volumes_from:
     - app
-  command: bash -c "./scripts/sidekiq.sh"
+  command: bash -c "/scripts/sidekiq.sh"
   env_file: .env
   links:
     - mongo
