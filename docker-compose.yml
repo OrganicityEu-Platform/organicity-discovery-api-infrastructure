@@ -55,13 +55,14 @@ worker:
   build: .
   volumes_from:
     - app
-  command: bash -c "/scripts/sidekiq.sh"
   env_file: .env
   links:
+    - app
     - mongo
     - db
     - redis
-
+  command: bash -c "/scripts/sidekiq.sh"
+  
 # spring:
 #   build: .
 #   volumes:
