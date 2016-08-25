@@ -22,7 +22,6 @@ mongo:
   dockerfile: containers/Dockerfile-mongo
   volumes:
     - ./scripts:/scripts
-
     - .:/organicity-discovery-api
     - ./organicity-discovery-api/tmp:/tmp
   # Expose port only within docker
