@@ -26,8 +26,7 @@ RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
 
 # Clone our private GitHub Repository
 RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
-RUN cd /organicity-discovery-api
-RUN ls
+RUN cd /$APPROOT
 
 # Define where our application will live inside the image
 ENV RAILS_ROOT $APPROOT
@@ -43,6 +42,9 @@ RUN gem install bundler
 
 # Finish establishing our Ruby environment
 RUN gem install nokogiri
+ADD $APPROOT/Gemfile Gemfile
+ADD $APPROOT/Gemfile.lock Gemfile.lock
+RUN bundle install
 
 # Copy the Rails application into place
 COPY . /organicity-discovery-api
