@@ -44,6 +44,8 @@ RUN gem install bundler
 RUN gem install nokogiri
 ADD /$APPROOT/Gemfile /$APPROOT/Gemfile
 ADD /$APPROOT/Gemfile.lock /$APPROOT/Gemfile.lock
+RUN ls
+RUN ls /$APPROOT
 RUN bundle install
 
 # Copy the Rails application into place
