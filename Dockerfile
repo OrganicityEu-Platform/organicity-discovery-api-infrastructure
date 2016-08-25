@@ -4,7 +4,7 @@ FROM ruby:2.2.2
 MAINTAINER Silvia Puglisi <silvia@fablabbcn.org>
 
 WORKDIR /$APPROOT
-ENV APPROOT organicity-discovery-api-infrastructure/organicity-discovery-api
+ENV APPROOT organicity-discovery-api
 
 # Install essential Linux packages
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client && apt-get install -y nodejs
@@ -25,7 +25,8 @@ RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
 
 
 # Clone our private GitHub Repository
-RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git /$APPROOT
+RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
+RUN cd /$APPROOT
 
 # Define where our application will live inside the image
 ENV RAILS_ROOT $APPROOT
