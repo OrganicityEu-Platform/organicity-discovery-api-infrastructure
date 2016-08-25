@@ -42,9 +42,6 @@ RUN gem install bundler
 
 # Finish establishing our Ruby environment
 RUN gem install nokogiri
-ADD Gemfile Gemfile
-ADD Gemfile.lock Gemfile.lock
-RUN bundle install
 
 # Copy the Rails application into place
 COPY . /organicity-discovery-api
