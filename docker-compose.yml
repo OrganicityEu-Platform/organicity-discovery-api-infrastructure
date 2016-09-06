@@ -9,9 +9,10 @@ redis:
 
 # service configuration for Postgres
 db:
+  build: .
   # use the preferred version of the official Postgres image
   # see https://hub.docker.com/_/postgres/
-  image: postgres:latest
+  dockerfile: containers/Dockerfile-postgres
   # persist the database between containers by storing it in a volume
   volumes:
     - oraganicityapi-postgres:/var/lib/postgresql/data
@@ -62,7 +63,7 @@ worker:
     - db
     - redis
   command: bash -c "/scripts/sidekiq.sh"
-  
+
 # spring:
 #   build: .
 #   volumes:
