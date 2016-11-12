@@ -89,8 +89,11 @@ web:
   # makes the web container aware of the app container
   links:
     - app
-  volumes_from:
-    - app
-  # expose the port we configured Nginx to bind to (it is ok to expose externally)
+  env_file: .env
+  # domain service mapping. full configuration in ./containers/nginx.conf
+  environment:
+    DOMAINS: 'discovery.organicity.eu -> http://app:3000'
+    # STAGE: local # Set this on local for using self-signed certificate
   ports:
-    - '80:80'
+    - 80:80
+    - 443:443
