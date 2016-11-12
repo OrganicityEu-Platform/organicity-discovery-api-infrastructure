@@ -19,6 +19,8 @@ db:
 
 mongo:
   build: .
+  # sources environment variable configuration for our app, required for the mongo tunnel
+  env_file: .env
   # build with a different Dockerfile
   dockerfile: containers/Dockerfile-mongo
   volumes:

@@ -4,3 +4,4 @@ tmp
 *.sql
 *.idea
 .DS_Store
+config/ssh/

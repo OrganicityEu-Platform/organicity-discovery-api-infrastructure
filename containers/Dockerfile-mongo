@@ -33,13 +33,15 @@ RUN apt-get update
 
 # Setup ssh key so that tunnel Works
 RUN mkdir /root/.ssh
-ADD ssh/* /root/.ssh/
+COPY /config/ssh/mongo_ssh_key /root/.ssh/gcocd
+COPY /config/ssh/mongo_ssh_config /root/.ssh/ssh_config
 RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
     ls /root/.ssh/  &&\
     ls &&\
     chmod 700 /root/.ssh &&\
     chmod 600 /root/.ssh/* &&\
-    chmod 644 ~/.ssh/ssh_config &&\
+    chmod 644 /root/.ssh/ssh_config &&\
+    #ssh-keyscan -t rsa $MONGO_HOST >> /root/.ssh/known_hosts # This fails. Must check.
     ssh-keyscan -t rsa ec2-52-40-19-99.us-west-2.compute.amazonaws.com >> /root/.ssh/known_hosts
 
 EXPOSE 3344
