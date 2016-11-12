@@ -1,7 +1,3 @@
-FROM postgres
+FROM mdillon/postgis
 
 MAINTAINER Silvia Puglisi <silvia@fablabbcn.org>
-
-# Install essential Linux packages
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
-RUN apt-get install -y postgresql-9.5-postgis-2.2 postgresql-9.5-postgis-scripts
