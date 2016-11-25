@@ -93,7 +93,7 @@ web:
   # domain service mapping. full configuration in ./containers/nginx.conf
   environment:
     DOMAINS: 'discovery.organicity.eu -> http://app:3000'
-    # STAGE: local # Set this on local for using self-signed certificate
+    STAGE: local # Set this on local for using self-signed certificate
   ports:
     - 80:80
     - 443:443
