@@ -4,6 +4,7 @@
 redis:
   image: redis:latest
   hostname: redis1
+  restart: unless-stopped
   ports:
     - "6379:6379"
 
@@ -14,15 +15,17 @@ db:
   # see https://hub.docker.com/_/postgres/
   dockerfile: containers/Dockerfile-postgres
   # persist the database between containers by storing it in a volume
+  restart: unless-stopped
   volumes:
     - oraganicityapi-postgres:/var/lib/postgresql/data
-
+ 
 mongo:
   build: .
   # sources environment variable configuration for our app, required for the mongo tunnel
   env_file: .env
   # build with a different Dockerfile
   dockerfile: containers/Dockerfile-mongo
+  restart: unless-stopped
   volumes:
     - ./scripts:/scripts
     - .:/organicity-discovery-api
@@ -49,6 +52,7 @@ app:
     - db
     - redis
     - mongo
+  restart: unless-stopped
   # expose the port we configured Puma to bind to (should expose only internally)
   ports:
     - "3000:3000"
@@ -64,6 +68,7 @@ worker:
     - mongo
     - db
     - redis
+  restart: unless-stopped
   command: bash -c "/scripts/sidekiq.sh"
 
 # spring:
@@ -93,7 +98,8 @@ web:
   # domain service mapping. full configuration in ./containers/nginx.conf
   environment:
     DOMAINS: 'discovery.organicity.eu -> http://app:3000'
-    # STAGE: local # Set this on local for using self-signed certificate
+    STAGE: local # Set this on local for using self-signed certificate
+  restart: unless-stopped 
   ports:
     - 80:80
     - 443:443
