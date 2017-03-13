@@ -22,9 +22,7 @@ RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
     chmod 700 /root/.ssh &&\
     chmod 600 /root/.ssh/* &&\
     chmod 644 /root/.ssh/ssh_config &&\
-    #ssh-keyscan -t rsa $MONGO_HOST >> /root/.ssh/known_hosts # This fails. Must check.
-    ssh-keyscan -t rsa ec2-52-40-19-99.us-west-2.compute.amazonaws.com >> /root/.ssh/known_hosts
-
+    ssh-keyscan -t rsa dev.orion.organicity.eu >> /root/.ssh/known_hosts # This fails. Must check.
 
 # Clone our private GitHub Repository
 RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
