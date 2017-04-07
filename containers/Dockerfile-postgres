@@ -1,3 +1,0 @@
-FROM mdillon/postgis
-
-MAINTAINER Silvia Puglisi <silvia@fablabbcn.org>

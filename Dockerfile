@@ -1,16 +1,15 @@
 # Base image with ruby 2.2.2
 FROM ruby:2.2.2
 
-MAINTAINER Silvia Puglisi <silvia@fablabbcn.org>
-
-WORKDIR /$APPROOT
-ENV APPROOT organicity-discovery-api
+ENV APPROOT /organicity-discovery-api
+WORKDIR $APPROOT
 
 # Install essential Linux packages
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client && apt-get install -y nodejs
-
-# Update Gems
-RUN gem update --system
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    nodejs
 
 # Setup ssh key so that tunnel Works
 RUN mkdir /root/.ssh
@@ -24,26 +23,23 @@ RUN cp /root/.ssh/gcocd /root/.ssh/id_rsa &&\
     chmod 644 /root/.ssh/ssh_config &&\
     ssh-keyscan -t rsa dev.orion.organicity.eu >> /root/.ssh/known_hosts # This fails. Must check.
 
-# Clone our private GitHub Repository
-RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
-RUN cd /$APPROOT
-
-# Define where our application will live inside the image
-ENV RAILS_ROOT $APPROOT
+# Clone our private GitHub Repository - should we?
+#RUN git clone -b master https://github.com/OrganicityEu/organicity-discovery-api.git
+RUN cd $APPROOT
 
 # Create application home. App server will need the pids dir so just create everything in one shot
 RUN mkdir -p $APPROOT/tmp/pids
 
-# Set our working directory inside the image
-WORKDIR $RAILS_ROOT
+# Update Gems
+RUN gem update --system
 
 # Prevent bundler warnings; ensure that the bundler version executed is >= that which created Gemfile.lock
 RUN gem install bundler
 
 # Finish establishing our Ruby environment
-RUN gem install nokogiri
-ADD /$APPROOT/Gemfile /$APPROOT/Gemfile
-ADD /$APPROOT/Gemfile.lock /$APPROOT/Gemfile.lock
+ADD $APPROOT/Gemfile $APPROOT/Gemfile
+ADD $APPROOT/Gemfile.lock $APPROOT/Gemfile.lock
+
 # RUN bundle update
 RUN bundle install
 

@@ -1,19 +1,12 @@
 # build from the official Nginx image
 FROM steveltn/https-portal
 
-MAINTAINER Silvia Puglisi <silvia@fablabbcn.org>
-
-WORKDIR /$APPROOT
-ENV APPROOT organicity-discovery-api
+ENV APPROOT /organicity-discovery-api
+WORKDIR $APPROOT
 
 # install essential Linux packages
-RUN apt-get update -qq && apt-get -y install apache2-utils
-
-# establish where Nginx should look for files
-ENV RAILS_ROOT /organicity-discovery-api
-
-# Set our working directory inside the image
-WORKDIR $RAILS_ROOT
+RUN apt-get update -qq && apt-get install -y \
+    apache2-utils
 
 # create log directory
 RUN mkdir log
@@ -23,7 +16,7 @@ COPY /config/nginx.conf /tmp/discovery.nginx
 
 # substitute variable references in the Nginx config template for real values from the environment
 # put the final config in its place
-RUN envsubst $RAILS_ROOT < /tmp/discovery.nginx > /var/lib/nginx-conf/default.conf.erb
+RUN envsubst $APPROOT < /tmp/discovery.nginx > /var/lib/nginx-conf/default.conf.erb
 
 # Use the "exec" form of CMD so Nginx shuts down gracefully on SIGTERM (i.e. `docker stop`)
 # CMD [ "nginx", "-g", "daemon off;" ]
