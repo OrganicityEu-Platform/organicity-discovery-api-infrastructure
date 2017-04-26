@@ -10,15 +10,14 @@ redis:
 
 # service configuration for Postgres
 db:
-  build: .
+  image: mdillon/postgis
   # use the preferred version of the official Postgres image
   # see https://hub.docker.com/_/postgres/
-  dockerfile: containers/Dockerfile-postgres
   # persist the database between containers by storing it in a volume
   restart: unless-stopped
   volumes:
     - oraganicityapi-postgres:/var/lib/postgresql/data
- 
+
 mongo:
   build: .
   # sources environment variable configuration for our app, required for the mongo tunnel
@@ -39,6 +38,7 @@ mongo:
 app:
   # use the Dockerfile next to this file
   build: .
+  dockerfile: organicity-discovery-api/Dockerfile
   # sources environment variable configuration for our app
   env_file: .env
   # rely on the RAILS_ENV value of the host machine
@@ -60,6 +60,8 @@ app:
 
 worker:
   build: .
+  # Worker is just a rails app like the 'app' running sidekiq, so they share Dockerfile
+  dockerfile: organicity-discovery-api/Dockerfile
   volumes_from:
     - app
   env_file: .env
@@ -99,7 +101,7 @@ web:
   environment:
     DOMAINS: 'discovery.organicity.eu -> http://app:3000'
     STAGE: local # Set this on local for using self-signed certificate
-  restart: unless-stopped 
+  restart: unless-stopped
   ports:
     - 80:80
     - 443:443
