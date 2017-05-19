@@ -10,4 +10,8 @@ This is the docker containers architecture used to deploy the assets-discovery a
  * mongo_ssh_key
  * mongo_ssh_config
 
+3. Create the database:
+
+`docker-compose app rails db:setup`
+
 3. `docker-compose up`
