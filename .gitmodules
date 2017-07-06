@@ -1,3 +1,6 @@
 [submodule "organicity-discovery-api"]
   path = organicity-discovery-api
 	url = https://github.com/OrganicityEu/organicity-discovery-api.git
+[submodule "organicity-recommender"]
+	path = organicity-recommender
+	url = https://github.com/OrganicityEu/organicity-recommender

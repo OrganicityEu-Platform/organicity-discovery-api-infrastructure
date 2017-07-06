@@ -96,6 +96,7 @@ web:
   # makes the web container aware of the app container
   links:
     - app
+    - recommender
   env_file: .env
   # domain service mapping. full configuration in ./containers/nginx.conf
   environment:
@@ -105,3 +106,12 @@ web:
   ports:
     - 80:80
     - 443:443
+
+# Prediction.io recommender (loaded from a submodule)
+recommender:
+  build: organicity-recommender
+  env_file: .env
+  ports:
+    - 7070:7070
+    - 8000:8000
+
