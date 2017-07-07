@@ -89,16 +89,13 @@ worker:
 
 # service configuration for our web server
 web:
-  # set the build context to the root of the Rails app
   image: steveltn/https-portal:1
-  # build with a different Dockerfile
-  # makes the web container aware of the app container
   links:
     - app
     - recommender
   env_file: .env
   environment:
-    DOMAINS: 'discovery.organicity.eu -> http://app:3000'
+    #DOMAINS: 'discovery.organicity.eu -> http://app:3000'
     STAGE: local # Set this on local for using self-signed certificate
   restart: unless-stopped
   ports:
@@ -107,8 +104,8 @@ web:
   volumes:
     - ./config/cors.conf:/etc/nginx/cors.conf
     - ./config/shared.conf:/etc/nginx/shared.conf
-    - ./config/discovery.organicity.eu.erb:/var/lib/nginx-conf/discovery.organicity.eu.erb:ro
-    - ./config/discovery.organicity.eu.ssl.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.erb:ro
+    - ./config/discovery.organicity.eu.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
+    - ./config/discovery.organicity.eu.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
 
 # Prediction.io recommender (loaded from a submodule)
 recommender:
