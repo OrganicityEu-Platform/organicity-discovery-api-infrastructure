@@ -4,17 +4,6 @@
 # http://nginx.org/en/docs/dirindex.html
 
 # define our application server
-upstream rails {
-  server app:3000;
-}
-
-upstream events {
-  server recommender:7070;
-}
-
-upstream queries {
-  server recommender:8000;
-}
 
 server {
   listen 443 ssl http2;
