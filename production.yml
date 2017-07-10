@@ -3,4 +3,4 @@
 
 web:
   environment:
-    STAGE: PRODUCTION
+    STAGE: 'production'
