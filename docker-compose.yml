@@ -89,16 +89,11 @@ worker:
 
 # service configuration for our web server
 web:
-  # set the build context to the root of the Rails app
-  build: .
-  # build with a different Dockerfile
-  dockerfile: containers/Dockerfile-nginx
-  # makes the web container aware of the app container
+  image: steveltn/https-portal:1
   links:
     - app
     - recommender
   env_file: .env
-  # domain service mapping. full configuration in ./containers/nginx.conf
   environment:
     DOMAINS: 'discovery.organicity.eu -> http://app:3000'
     STAGE: local # Set this on local for using self-signed certificate
@@ -106,6 +101,17 @@ web:
   ports:
     - 80:80
     - 443:443
+  volumes:
+    - ./config/cors.conf:/etc/nginx/cors.conf
+    - ./config/shared.conf:/etc/nginx/shared.conf
+    - ./config/upstream.conf:/etc/nginx/conf.d/upstream.conf
+      # These files must go in /var/lib/nginx-conf where the erb values are converted
+      # Either create a specific site:
+      #- ./config/default.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
+      #- ./config/default.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
+      # OR overwrite the defaults
+    - ./config/default.conf.erb:/var/lib/nginx-conf/default.conf.erb:ro
+    - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
 # Prediction.io recommender (loaded from a submodule)
 recommender:
