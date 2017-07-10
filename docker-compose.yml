@@ -104,7 +104,7 @@ web:
   volumes:
     - ./config/cors.conf:/etc/nginx/cors.conf
     - ./config/shared.conf:/etc/nginx/shared.conf
-    - ./config/upstream.conf:/etc/nginx/upstream.conf
+    - ./config/upstream.conf:/etc/nginx/conf.d/upstream.conf
       # These files must go in /var/lib/nginx-conf where the erb values are converted
       # Either overwrite a specific site:
       #- ./config/discovery.organicity.eu.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
