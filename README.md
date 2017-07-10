@@ -22,3 +22,8 @@ This is the docker containers architecture used to deploy the assets-discovery a
   `docker-compose up`
 
 
+## PRODUCTION:
+
+To use prod. docker settings use:
+
+`docker-compose -f docker-compose.yml -f production.yml up -d`
