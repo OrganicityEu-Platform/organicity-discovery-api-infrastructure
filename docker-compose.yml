@@ -95,7 +95,7 @@ web:
     - recommender
   env_file: .env
   environment:
-    #DOMAINS: 'discovery.organicity.eu -> http://app:3000'
+    DOMAINS: 'discovery.organicity.eu -> http://app:3000'
     STAGE: local # Set this on local for using self-signed certificate
   restart: unless-stopped
   ports:
@@ -106,8 +106,12 @@ web:
     - ./config/shared.conf:/etc/nginx/shared.conf
     - ./config/upstream.conf:/etc/nginx/upstream.conf
       # These files must go in /var/lib/nginx-conf where the erb values are converted
-    - ./config/discovery.organicity.eu.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
-    - ./config/discovery.organicity.eu.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
+      # Either overwrite a specific site:
+      #- ./config/discovery.organicity.eu.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
+      #- ./config/discovery.organicity.eu.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
+      # OR overwrite the defaults
+    - ./config/default.conf.erb:/var/lib/nginx-conf/default.conf.erb:ro
+    - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
 # Prediction.io recommender (loaded from a submodule)
 recommender:
