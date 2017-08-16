@@ -95,8 +95,9 @@ web:
       #- recommender
   env_file: .env
   environment:
-    DOMAINS: 'discovery.organicity.eu -> http://app:3000'
-    STAGE: local # Set this on local for using self-signed certificate
+    #DOMAINS: 'discovery.organicity.eu -> http://app:3000'
+    DOMAINS: "${MY_DOMAIN}"  # Takes value from .env file
+    STAGE: "${MY_STAGE}"
   restart: unless-stopped
   ports:
     - 80:80
