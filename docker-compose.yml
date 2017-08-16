@@ -92,7 +92,7 @@ web:
   image: steveltn/https-portal:1
   links:
     - app
-    - recommender
+      #- recommender
   env_file: .env
   environment:
     DOMAINS: 'discovery.organicity.eu -> http://app:3000'
@@ -114,10 +114,10 @@ web:
     - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
 # Prediction.io recommender (loaded from a submodule)
-recommender:
-  build: organicity-recommender
-  env_file: .env
-  ports:
-    - 7070:7070
-    - 8000:8000
+#recommender:
+#  build: organicity-recommender
+#  env_file: .env
+#  ports:
+#    - 7070:7070
+#    - 8000:8000
 
