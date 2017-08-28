@@ -110,7 +110,7 @@ web:
       # Either create a specific site:
       #- ./config/default.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
       #- ./config/default.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
-      # OR overwrite the defaults
+      # OR overwrite the defaults:
     - ./config/default.conf.erb:/var/lib/nginx-conf/default.conf.erb:ro
     - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
