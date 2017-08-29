@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libffi6 \
     openssh-client \
+    net-tools \
+    telnet \
     supervisor
 
 # Setup ssh key so that tunnel Works

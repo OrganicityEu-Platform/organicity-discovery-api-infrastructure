@@ -21,18 +21,18 @@ db:
 mongo:
   build: .
   # sources environment variable configuration for our app, required for the mongo tunnel
-  env_file: .env
+  #env_file: .env
   # build with a different Dockerfile
   dockerfile: containers/Dockerfile-mongo
   restart: unless-stopped
-  volumes:
-    - ./scripts:/scripts
-    - .:/organicity-discovery-api
-    - ./organicity-discovery-api/tmp:/tmp
+  #volumes:
+    # - ./scripts:/scripts:ro
+      #    - .:/organicity-discovery-api
+      #    - ./organicity-discovery-api/tmp:/tmp
   # Expose port only within docker
   ports:
     - "3344:3344"
-  command: bash -c "/scripts/tunnel.sh"
+  command: bash -c "ssh -v -i /root/.ssh/mongo_ssh_key -Ng -L 3344:0.0.0.0:27017 iaac@pro.server.organicity.eu"
 
 # service configuration for our dockerized Rails app
 app:
