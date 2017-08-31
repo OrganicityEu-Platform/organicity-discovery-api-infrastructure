@@ -9,4 +9,4 @@ curl https://opbeat.com/api/v1/organizations/$OPBEAT_ORG_ID/apps/$OPBEAT_APP_ID/
     -d rev=`git log -n 1 --pretty=format:%H` \
     -d branch=`git rev-parse --abbrev-ref HEAD` \
     -d status=completed;
-bundle exec puma -C config/puma.rb;
+bundle exec puma -C config/puma.rb --pidfile tmp/puma.pid -S log/puma.state --control-token smartTOKEN --control tcp://0.0.0.0:9191;
