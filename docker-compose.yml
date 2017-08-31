@@ -1,14 +1,11 @@
+# TODO:
 # Add elastic search, logstash and kibana
 
-# service configuration for Redis
 redis:
   image: redis:latest
   hostname: redis1
   restart: unless-stopped
-  ports:
-    - "6379:6379"
 
-# service configuration for Postgres
 db:
   image: mdillon/postgis
   # use the preferred version of the official Postgres image
@@ -20,34 +17,19 @@ db:
 
 mongo:
   build: .
-  # sources environment variable configuration for our app, required for the mongo tunnel
-  #env_file: .env
-  # build with a different Dockerfile
   dockerfile: containers/Dockerfile-mongo
   restart: unless-stopped
-  #volumes:
-    # - ./scripts:/scripts:ro
-      #    - .:/organicity-discovery-api
-      #    - ./organicity-discovery-api/tmp:/tmp
-  # Expose port only within docker
-  ports:
-    - "3344:3344"
   command: bash -c "ssh -v -i /root/.ssh/mongo_ssh_key -Ng -L 3344:0.0.0.0:27017 iaac@pro.server.organicity.eu"
 
-# service configuration for our dockerized Rails app
 app:
-  # use the Dockerfile next to this file
   build: .
   dockerfile: organicity-discovery-api/Dockerfile
-  # sources environment variable configuration for our app
   env_file: .env
   # rely on the RAILS_ENV value of the host machine
   volumes:
     - ./organicity-discovery-api:/organicity-discovery-api
     - ./organicity-discovery-api/tmp:/tmp
     - ./scripts:/scripts
-    - ./config:/config
-  # makes the app container aware of the DB container
   links:
     - db
     - redis
@@ -73,26 +55,10 @@ worker:
   restart: unless-stopped
   command: bash -c "/scripts/sidekiq.sh"
 
-# spring:
-#   build: .
-#   volumes:
-#     - .:/organicity-discovery-api
-#   links:
-#     - app
-#   command: spring server
-#
-#   # This ensures that the pid namespace is shared between the host
-#   # and the container. It's not necessary to be able to run spring
-#   # commands, but it is necessary for "spring status" and "spring stop"
-#   # to work properly.
-#   pid: host
-
-# service configuration for our web server
 web:
   image: steveltn/https-portal:1
   links:
     - app
-      #- recommender
   env_file: .env
   environment:
     #DOMAINS: 'discovery.organicity.eu -> http://app:3000'
@@ -113,12 +79,4 @@ web:
       # OR overwrite the defaults:
     - ./config/default.conf.erb:/var/lib/nginx-conf/default.conf.erb:ro
     - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
-
-# Prediction.io recommender (loaded from a submodule)
-#recommender:
-#  build: organicity-recommender
-#  env_file: .env
-#  ports:
-#    - 7070:7070
-#    - 8000:8000
 
