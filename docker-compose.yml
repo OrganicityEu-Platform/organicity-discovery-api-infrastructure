@@ -1,82 +1,82 @@
-# TODO:
-# Add elastic search, logstash and kibana
+version: '2.2'
+services:
+  redis:
+    image: redis:latest
+    hostname: redis1
+    restart: unless-stopped
 
-redis:
-  image: redis:latest
-  hostname: redis1
-  restart: unless-stopped
+  db:
+    image: mdillon/postgis
+    # use the preferred version of the official Postgres image
+    # see https://hub.docker.com/_/postgres/
+    # persist the database between containers by storing it in a volume
+    restart: unless-stopped
+    volumes:
+      - oraganicityapi-postgres:/var/lib/postgresql/data
 
-db:
-  image: mdillon/postgis
-  # use the preferred version of the official Postgres image
-  # see https://hub.docker.com/_/postgres/
-  # persist the database between containers by storing it in a volume
-  restart: unless-stopped
-  volumes:
-    - oraganicityapi-postgres:/var/lib/postgresql/data
+  mongo:
+    build:
+      context: .
+      dockerfile: containers/Dockerfile-mongo
+    restart: unless-stopped
+    command: bash -c "ssh -v -i /root/.ssh/mongo_ssh_key -Ng -L 3344:0.0.0.0:27017 iaac@pro.server.organicity.eu"
 
-mongo:
-  build: .
-  dockerfile: containers/Dockerfile-mongo
-  restart: unless-stopped
-  command: bash -c "ssh -v -i /root/.ssh/mongo_ssh_key -Ng -L 3344:0.0.0.0:27017 iaac@pro.server.organicity.eu"
+  app:
+    build:
+      context: .
+      dockerfile: organicity-discovery-api/Dockerfile
+    env_file: .env
+    # rely on the RAILS_ENV value of the host machine
+    volumes:
+      - ./organicity-discovery-api:/organicity-discovery-api
+      - ./organicity-discovery-api/tmp:/tmp
+      - ./scripts:/scripts
+    depends_on:
+      - db
+      - redis
+      - mongo
+    restart: unless-stopped
+    # expose the port we configured Puma to bind to (should expose only internally)
+    ports:
+      - "3000:3000"
+    command: bash -c "/scripts/startup.sh"
 
-app:
-  build: .
-  dockerfile: organicity-discovery-api/Dockerfile
-  env_file: .env
-  # rely on the RAILS_ENV value of the host machine
-  volumes:
-    - ./organicity-discovery-api:/organicity-discovery-api
-    - ./organicity-discovery-api/tmp:/tmp
-    - ./scripts:/scripts
-  links:
-    - db
-    - redis
-    - mongo
-  restart: unless-stopped
-  # expose the port we configured Puma to bind to (should expose only internally)
-  ports:
-    - "3000:3000"
-  command: bash -c "/scripts/startup.sh"
-
-worker:
-  build: .
   # Worker is just a rails app like the 'app' running sidekiq, so they share Dockerfile
-  dockerfile: organicity-discovery-api/Dockerfile
-  volumes_from:
-    - app
-  env_file: .env
-  links:
-    - app
-    - mongo
-    - db
-    - redis
-  restart: unless-stopped
-  command: bash -c "/scripts/sidekiq.sh"
+  worker:
+    build:
+      context: .
+      dockerfile: organicity-discovery-api/Dockerfile
+    volumes:
+      - ./organicity-discovery-api:/organicity-discovery-api
+        #- ./organicity-discovery-api/tmp:/tmp
+    env_file: .env
+    depends_on:
+      - app
+    restart: unless-stopped
+    command: bash -c "/scripts/sidekiq.sh"
 
-web:
-  image: steveltn/https-portal:1
-  links:
-    - app
-  env_file: .env
-  environment:
-    #DOMAINS: 'discovery.organicity.eu -> http://app:3000'
-    DOMAINS: "${MY_DOMAIN}"  # Takes value from .env file
-    STAGE: "${MY_STAGE}"
-  restart: unless-stopped
-  ports:
-    - 80:80
-    - 443:443
-  volumes:
-    - ./config/cors.conf:/etc/nginx/cors.conf
-    - ./config/shared.conf:/etc/nginx/shared.conf
-    - ./config/upstream.conf:/etc/nginx/conf.d/upstream.conf
-      # These files must go in /var/lib/nginx-conf where the erb values are converted
-      # Either create a specific site:
-      #- ./config/default.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
-      #- ./config/default.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
-      # OR overwrite the defaults:
-    - ./config/default.conf.erb:/var/lib/nginx-conf/default.conf.erb:ro
-    - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
+  web:
+    image: steveltn/https-portal:1
+    env_file: .env
+    environment:
+      #DOMAINS: 'discovery.organicity.eu -> http://app:3000'
+      DOMAINS: "${MY_DOMAIN}"  # Takes value from .env file
+      STAGE: "${MY_STAGE}"
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./config/cors.conf:/etc/nginx/cors.conf
+      - ./config/shared.conf:/etc/nginx/shared.conf
+      - ./config/upstream.conf:/etc/nginx/conf.d/upstream.conf
+        # These files must go in /var/lib/nginx-conf where the erb values are converted
+        # Either create a specific site:
+        #- ./config/default.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.conf.erb:ro
+        #- ./config/default.ssl.conf.erb:/var/lib/nginx-conf/discovery.organicity.eu.ssl.conf.erb:ro
+        # OR overwrite the defaults:
+      - ./config/default.conf.erb:/var/lib/nginx-conf/default.conf.erb:ro
+      - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
+volumes:
+  oraganicityapi-postgres:
