@@ -39,6 +39,8 @@ services:
     # expose the port we configured Puma to bind to (should expose only internally)
     ports:
       - "3000:3000"
+      - "9191" # Used for Puma debugging
+      # expose the port we configured Puma to bind to (should expose only internally)
     command: bash -c "/scripts/startup.sh"
 
   # Worker is just a rails app like the 'app' running sidekiq, so they share Dockerfile
