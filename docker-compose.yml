@@ -12,7 +12,7 @@ services:
     # persist the database between containers by storing it in a volume
     restart: unless-stopped
     volumes:
-      - oraganicityapi-postgres:/var/lib/postgresql/data
+      - organicityapi-postgres:/var/lib/postgresql/data
 
   mongo:
     build:
@@ -81,4 +81,4 @@ services:
       - ./config/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
 volumes:
-  oraganicityapi-postgres:
+  organicityapi-postgres:

@@ -24,12 +24,13 @@ This is the docker containers architecture used to deploy the assets-discovery a
 
 ## PRODUCTION:
 
-To use prod. docker settings use:
+Make sure that `MY_STAGE=production` in the `.env` file
 
-`docker-compose -f docker-compose.yml -f production.yml up -d`
-
+`docker-compose up -d`
 
 ## DEVELOPMENT:
+
+Make sure that `MY_STAGE=local` in the `.env` file
 
 `docker-compose up -d`
 
