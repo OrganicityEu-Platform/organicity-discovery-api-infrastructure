@@ -22,6 +22,8 @@ services:
     command: bash -c "ssh -v -i /root/.ssh/mongo_ssh_key -Ng -L 3344:0.0.0.0:27017 iaac@pro.server.organicity.eu"
 
   app:
+   #stdin_open: true
+   #tty: true
     build:
       context: .
       dockerfile: organicity-discovery-api/Dockerfile
