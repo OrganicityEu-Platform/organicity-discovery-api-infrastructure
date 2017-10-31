@@ -52,7 +52,8 @@ services:
       dockerfile: organicity-discovery-api/Dockerfile
     volumes:
       - ./organicity-discovery-api:/organicity-discovery-api
-        #- ./organicity-discovery-api/tmp:/tmp
+      - ./organicity-discovery-api/tmp:/tmp
+      - ./scripts:/scripts
     env_file: .env
     depends_on:
       - app
