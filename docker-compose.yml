@@ -7,10 +7,8 @@ services:
 
   db:
     image: mdillon/postgis
-    # use the preferred version of the official Postgres image
-    # see https://hub.docker.com/_/postgres/
-    # persist the database between containers by storing it in a volume
     restart: unless-stopped
+    # persist the database between containers by storing it in a volume
     volumes:
       - organicityapi-postgres:/var/lib/postgresql/data
 
@@ -21,17 +19,17 @@ services:
     restart: unless-stopped
     command: bash -c "ssh -v -i /root/.ssh/mongo_ssh_key -Ng -L 3344:0.0.0.0:27017 iaac@pro.server.organicity.eu"
 
-  app:
+  #allow worker to inherit these settigs
+  app: &app_base
    #stdin_open: true
    #tty: true
     build:
-      context: .
-      dockerfile: organicity-discovery-api/Dockerfile
+      context: organicity-discovery-api
+      dockerfile: Dockerfile
     env_file: .env
     # rely on the RAILS_ENV value of the host machine
     volumes:
       - ./organicity-discovery-api:/organicity-discovery-api
-      - ./organicity-discovery-api/tmp:/tmp
       - ./scripts:/scripts
     depends_on:
       - db
@@ -47,18 +45,12 @@ services:
 
   # Worker is just a rails app like the 'app' running sidekiq, so they share Dockerfile
   worker:
-    build:
-      context: .
-      dockerfile: organicity-discovery-api/Dockerfile
-    volumes:
-      - ./organicity-discovery-api:/organicity-discovery-api
-      - ./organicity-discovery-api/tmp:/tmp
-      - ./scripts:/scripts
-    env_file: .env
+    <<: *app_base #inherit from app
     depends_on:
       - app
-    restart: unless-stopped
     command: bash -c "/scripts/sidekiq.sh"
+    ports:
+      - "3001:3000" #without this, worker will inherit app's port and create a conflict
 
   web:
     image: steveltn/https-portal:1
