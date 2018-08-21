@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
 
   db:
-    image: mdillon/postgis
+    image: mdillon/postgis:9.6
     restart: unless-stopped
     # persist the database between containers by storing it in a volume
     volumes:
